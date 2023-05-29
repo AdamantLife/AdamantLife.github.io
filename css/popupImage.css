@@ -1,0 +1,34 @@
+.popup-background{
+    position: fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background-color: rgb(127,127,127,0);
+    visibility: hidden;
+    transition: background-color .5s linear;
+}
+
+.popup-background:has(#popupImage.open){
+    visibility: visible;
+    background-color:  rgb(127,127,127,.5);
+}
+
+#popupImage{
+    position: fixed;
+    top:12vh;
+    left: 12vw;
+    max-width: 0px;
+    max-height: 0px;
+    transition: max-width .5s linear, max-height .5s linear;
+    overflow: hidden;
+    border:groove;
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+#popupImage.open{
+    max-width: 75vw;
+    max-height: 75vh;
+}
