@@ -1,0 +1,129 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://adamantlife.github.io/parametricsvg.json",
+    "title": "ParametricSVG JSON Schema",
+    "description": "Describes the valid JSON to represent an SVG Element using the ParametricSVG library",
+    "type":"object",
+    "properties": {
+        "attributes": {
+            "description": "HTML attributes for the SVG element",
+            "type": "object"
+        },
+        "equations": {
+            "description": "Equations available to evaluate in the construction of the SVG",
+            "type": "object",
+            "patternProperties":{
+                ".*":{
+                    "description": "Describes an equation: the key for this property should be its name",
+                    "type":"object",
+                    "properties":{
+                        "name":{
+                            "description": "Name of the equation, should match its key in the 'equations' property",
+                            "type":"string"
+                        },
+                        "value": {
+                            "description": "Value of the equation (either in equation form or a numerical result)",
+                            "type":"string"
+                        },
+                        "disabled": {
+                            "description": "Whether the equation is disabled; disabled equations are excluded when constructing the SVG",
+                            "type":"boolean"
+                        },
+                        "comment": {
+                            "description": "Any comments about the equation",
+                            "type":"string"
+                        }
+                    },
+                    "required": ["name", "value" ]
+                }
+            }
+        },
+        "svgcomponents": {
+            "description": "The full description of the SVG Element",
+            "type": "array",
+            "items": {
+                "description": "A single SVG Component",
+                "type":"object",
+                "properties": {
+                    "type": {
+                        "description": "The type of element",
+                        "type":"string",
+                        "enum": [ "circle", "line", "ellipse", "rect", "polygon", "polyline", "path" ]
+                    },
+                    "attributes": {
+                        "description": "HTML attributes for the SVG Component",
+                        "type":"object"
+                    }
+                },
+                "required": ["type"],
+                "unevaluatedProperties": false,
+                "allOf":[
+                    {
+                        "if":{
+                            "properties":{
+                                "type":{
+                                    "const": "circle"
+                                }
+                            }
+                        },
+                        "then":{
+                            "properties":{
+                                "cx": {
+                                    "description": "The x coordinate of the center of the circle", 
+                                    "type":["number", "string"]
+                                },
+                                "cy": {
+                                    "description": "The y coordinate of the center of the circle", 
+                                    "type":["number", "string"]
+                                },
+                                "r": {
+                                    "description": "The radius of the circle", 
+                                    "type":["number", "string"]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if":{
+                            "properties":{
+                                "type":{
+                                    "const": "rect"
+                                }
+                            }
+                        },
+                        "then":{    
+                            "properties":{
+                                "x": {  
+                                    "description": "The x coordinate of the top left corner of the rectangle",
+                                    "type":["number", "string"]
+                                },
+                                "y": {
+                                    "description": "The y coordinate of the top left corner of the rectangle",
+                                    "type":["number", "string"]
+                                },
+                                "width": {
+                                    "description": "The width of the rectangle",
+                                    "type":["number", "string"]
+                                },
+                                "height": {
+                                    "description": "The height of the rectangle",
+                                    "type":["number", "string"]
+                                },
+                                "rx": {
+                                    "description": "The horizontal corner radius of the rectangle",
+                                    "type":["number", "string"]
+                                },
+                                "ry": {
+                                    "description": "The vertical corner radius of the rectangle",
+                                    "type":["number", "string"]
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "additionalProperties": false,
+    "required": [ "attributes", "equations" , "svgcomponents" ]
+}
