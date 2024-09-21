@@ -34,6 +34,7 @@
                             "type":"string"
                         }
                     },
+                    "additionalProperties": false,
                     "required": ["name", "value" ]
                 }
             }
@@ -116,6 +117,419 @@
                                 "ry": {
                                     "description": "The vertical corner radius of the rectangle",
                                     "type":["number", "string"]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if":{
+                            "properties":{
+                                "type":{
+                                    "const": "ellipse"
+                                }
+                            }
+                        },
+                        "then":{    
+                            "properties":{
+                                "cx": {  
+                                    "description": "The x coordinate of the center of the ellipse",
+                                    "type":["number", "string"]
+                                },
+                                "cy": {
+                                    "description": "The y coordinate of the center of the ellipse",
+                                    "type":["number", "string"]
+                                },
+                                "rx": {
+                                    "description": "The radius of the ellipse along the x axis",
+                                    "type":["number", "string"]
+                                },
+                                "ry": {
+                                    "description": "The radius of the ellipse along the y axis",
+                                    "type":["number", "string"]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if":{
+                            "properties":{
+                                "type":{
+                                    "const": "line"
+                                }
+                            }
+                        },
+                        "then":{
+                            "properties":{
+                                "x1": {
+                                    "description": "The x coordinate of the start of the line",
+                                    "type":["number", "string"]
+                                },
+                                "y1": {
+                                    "description": "The y coordinate of the start of the line",
+                                    "type":["number", "string"]
+                                },
+                                "x2": {
+                                    "description": "The x coordinate of the end of the line",
+                                    "type":["number", "string"]
+                                },
+                                "y2": {
+                                    "description": "The y coordinate of the end of the line",
+                                    "type":["number", "string"]
+                                }
+                            }
+                        }   
+                    },
+                    {
+                        "if":{
+                            "properties":{
+                                "type":{
+                                    "const": "polygon"
+                                }
+                            }
+                        },
+                        "then":{
+                            "properties":{
+                                "points": {
+                                    "description": "The list of points (pairs of x,y absolute coordinates) required to draw the polygon.",
+                                    "type":"array",
+                                    "items": {
+                                        "description": "A pair of x,y absolute coordinates",
+                                        "type":["array"],
+                                        "items": {
+                                            "description": "The x and y coordinates",
+                                            "type":["number", "string"],
+                                            "minItems": 2,
+                                            "maxItems": 2
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if":{
+                            "properties":{
+                                "type":{
+                                    "const": "polyline"
+                                }
+                            }
+                        },
+                        "then":{
+                            "properties":{
+                                "points": {
+                                    "description": "The list of points (pairs of x,y absolute coordinates) required to draw the polyline.",
+                                    "type":"array",
+                                    "items": {
+                                        "description": "A pair of x,y absolute coordinates",
+                                        "type":"array",
+                                        "items": {
+                                            "description": "The x and y coordinates",
+                                            "type":["number", "string"],
+                                            "minItems": 2,
+                                            "maxItems": 2
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if":{
+                            "properties":{
+                                "type":{
+                                    "const": "path"
+                                }
+                            }
+                        },
+                        "then":{
+                            "properties":{
+                                "d": {
+                                    "description": "The path definition",
+                                    "type":"array",
+                                    "items": {
+                                        "description": "A path command",
+                                        "type":"object",
+                                        "properties": {
+                                            "type": {
+                                                "description": "The path command type",
+                                                "type":"string",
+                                                "enum": [
+                                                    "M", "m", "move",
+                                                    "L", "l", "line",
+                                                    "H", "h", "horizontal",
+                                                    "V", "v", "vertical",
+                                                    "Z", "z", "close",
+                                                    "C", "c", "cubic",
+                                                    "S", "s", "shortcubic",
+                                                    "Q", "q", "quadratic",
+                                                    "T", "t", "shortquadratic",
+                                                    "A", "a", "arc"]
+                                            },
+                                            "relative": {
+                                                "description": "Whether the path command is relative or absolute. If provided, it will override the type's specific default.",
+                                                "type":"boolean"
+                                            }
+                                        },
+                                        "required": ["type"],
+                                        "unevaluatedProperties": false,
+                                        "allOf":[
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["Z", "z", "close"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines a close command"
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["M", "m", "move"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines a move command"
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["L", "l", "line"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines a line command"
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["M", "m", "move", "L", "l", "line"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "properties":{
+                                                        "x": {
+                                                            "description": "The x coordinate",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y": {
+                                                            "description": "The y coordinate",
+                                                            "type":["number", "string"]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["H", "h", "horizontal"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines an horizontal line command",
+                                                    "properties":{
+                                                        "x": {
+                                                            "description": "The x coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["V", "v", "vertical"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines a vertical line command",
+                                                    "properties":{
+                                                        "y": {
+                                                            "description": "The y coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["C", "c", "cubic"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines a Cubic Bezier Curve command",
+                                                    "properties":{
+                                                        "x1": {
+                                                            "description": "The x coordinate of the first control point",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y1": {
+                                                            "description": "The y coordinate of the first control point",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "x2": {
+                                                            "description": "The x coordinate of the second control point",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y2": {
+                                                            "description": "The y coordinate of the second control point",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "x": {
+                                                            "description": "The x coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y": {
+                                                            "description": "The y coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["S", "s", "shortcubic"]
+                                                        } 
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines a Short Cubic Bezier Curve command",
+                                                    "properties":{
+                                                        "x2": {
+                                                            "description": "The x coordinate of the second control point",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y2": {
+                                                            "description": "The y coordinate of the second control point",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "x": {
+                                                            "description": "The x coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y": {
+                                                            "description": "The y coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["Q", "q", "quadratic"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines a Quadratic Bezier Curve command",
+                                                    "properties":{
+                                                        "x1": {
+                                                            "description": "The x coordinate of the first control point",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y1": {
+                                                            "description": "The y coordinate of the first control point",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "x": {
+                                                            "description": "The x coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y": {
+                                                            "description": "The y coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["T", "t", "shortquadratic"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines a Short Quadratic Bezier Curve command",
+                                                    "properties":{
+                                                        "x": {
+                                                            "description": "The x coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y": {
+                                                            "description": "The y coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if":{
+                                                    "properties":{
+                                                        "type":{
+                                                            "enum": ["A", "a", "arc"]
+                                                        }
+                                                    }
+                                                },
+                                                "then":{
+                                                    "description": "Defines an Arc command",
+                                                    "properties":{
+                                                        "rx": {
+                                                            "description": "The x radius of the arc",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "ry": {
+                                                            "description": "The y radius of the arc",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "xRotation": {
+                                                            "description": "The rotation of the arc",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "largeArcFlag": {
+                                                            "description": "Whether the arc is large or not",
+                                                            "type":"boolean"
+                                                        },
+                                                        "sweepFlag": {
+                                                            "description": "Whether the arc is clockwise or not",
+                                                            "type":"boolean"
+                                                        },
+                                                        "x": {
+                                                            "description": "The x coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        },
+                                                        "y": {
+                                                            "description": "The y coordinate at which to end the line",
+                                                            "type":["number", "string"]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
                                 }
                             }
                         }
